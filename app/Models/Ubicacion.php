@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Ubicacion extends Model
 {
     use HasFactory;
-    protected $table = 'ubicacion'; //codigo añadido de chatgpt fuera del video guia 
+    protected $table = 'ubicacion';
 
     protected $primaryKey = 'id_ubicacion';
     protected $fillable = ['nombre_ubicacion', 'capacidad', 'descripcion'];

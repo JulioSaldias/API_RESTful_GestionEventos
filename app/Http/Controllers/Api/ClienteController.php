@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\Ubicacion;
+use App\Models\Cliente;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 
-class UbicacionController extends Controller
+class ClienteController extends Controller
 {
     //mostrar todos los datos
     public function index()
     {
-        $ubicacion = Ubicacion::paginate(5);
+        $cliente = Cliente::paginate(5);
         $data = [
-            'Ubicaciones' => $ubicacion,
+            'Clientes' => $cliente,
             'status' => 200
         ];
 
@@ -23,11 +23,11 @@ class UbicacionController extends Controller
     //ingresar datos
     public function store(Request $request)
     {
-
         $validator = Validator::make($request->all(), [
-            'nombre_ubicacion' => 'required|max:255',
-            'capacidad' => 'required|integer',
-            'descripcion' => 'nullable'
+            'nombre_cliente' => 'required|max:255',
+            'ci_cliente' => 'required|max:30',
+            'telefono' => 'required|max:30',
+            'correo' => 'required|email|unique:Cliente'
         ]);
 
         if ($validator->fails()) {
@@ -40,22 +40,23 @@ class UbicacionController extends Controller
             return response()->json($data, 400);
         }
 
-        $ubicacion = Ubicacion::create([
-            'nombre_ubicacion' => $request->nombre_ubicacion,
-            'capacidad' => $request->capacidad,
-            'descripcion' => $request->descripcion,
+        $cliente = Cliente::create([
+            'nombre_cliente' => $request->nombre_cliente,
+            'ci_cliente' => $request->ci_cliente,
+            'telefono' => $request->telefono,
+            'correo' => $request->correo
         ]);
 
-        if (!$ubicacion) {
+        if (!$cliente) {
             $data = [
-                'message' => 'Error al crear la Ubicacion',
+                'message' => 'Error al crear al Cliente',
                 'status' => 500
             ];
             return response()->json($data, 500);
         }
 
         $data = [
-            'Ubicaciones' => $ubicacion,
+            'Clientes' => $cliente,
             'status' => 201
         ];
 
@@ -64,18 +65,18 @@ class UbicacionController extends Controller
     //mostrar un determinado registro
     public function show($id)
     {
-        $ubicacion = Ubicacion::find($id);
+        $cliente = Cliente::find($id);
 
-        if (!$ubicacion) {
+        if (!$cliente) {
             $data = [
-                'message' => 'Ubicacion no encontrada',
+                'message' => 'Cliente no encontrado',
                 'status' => 404
             ];
             return response()->json($data, 404);
         }
 
         $data = [
-            'Ubicaciones' => $ubicacion,
+            'Clientes' => $cliente,
             'status' => 200
         ];
 
@@ -84,20 +85,20 @@ class UbicacionController extends Controller
     //eliminar
     public function destroy($id)
     {
-        $ubicacion = Ubicacion::find($id);
+        $cliente = Cliente::find($id);
 
-        if (!$ubicacion) {
+        if (!$cliente) {
             $data = [
-                'message' => 'Ubicacion no encontrada',
+                'message' => 'Cliente no encontrado',
                 'status' => 404
             ];
             return response()->json($data, 404);
         }
 
-        $ubicacion->delete();
+        $cliente->delete();
 
         $data = [
-            'message' => 'Ubicacion eliminada',
+            'message' => 'Cliente eliminado',
             'status' => 200
         ];
 
@@ -106,20 +107,21 @@ class UbicacionController extends Controller
     //actualizar
     public function update(Request $request, $id)
     {
-        $ubicacion = Ubicacion::find($id);
+        $cliente = Cliente::find($id);
 
-        if (!$ubicacion) {
+        if (!$cliente) {
             $data = [
-                'message' => 'Ubicacion no encontrada',
+                'message' => 'Cliente no encontrado',
                 'status' => 404
             ];
             return response()->json($data, 404);
         }
 
         $validator = Validator::make($request->all(), [
-            'nombre_ubicacion' => 'required|max:255',
-            'capacidad' => 'required|integer',
-            'descripcion' => 'nullable'
+            'nombre_cliente' => 'required|max:255',
+            'ci_cliente' => 'required|max:30',
+            'telefono' => 'required|max:30',
+            'correo' => 'required|email|unique:Cliente'
         ]);
 
         if ($validator->fails()) {
@@ -131,15 +133,16 @@ class UbicacionController extends Controller
 
             return response()->json($data, 400);
         }
-        $ubicacion->nombre_ubicacion = $request->nombre_ubicacion;
-        $ubicacion->capacidad = $request->capacidad;
-        $ubicacion->descripcion = $request->descripcion;
+        $cliente->nombre_cliente = $request->nombre_cliente;
+        $cliente->ci_cliente = $request->ci_cliente;
+        $cliente->telefono = $request->telefono;
+        $cliente->correo = $request->correo;
 
-        $ubicacion->save();
+        $cliente->save();
 
         $data = [
-            'message' => 'Ubicacion actualizada',
-            'Ubicaciones' => $ubicacion,
+            'message' => 'Cliente actualizado',
+            'Clientes' => $cliente,
             'status' => 200
         ];
 
@@ -149,20 +152,21 @@ class UbicacionController extends Controller
     public function updatePartial(Request $request, $id)
     {
 
-        $ubicacion = Ubicacion::find($id);
+        $cliente = Cliente::find($id);
 
-        if (!$ubicacion) {
+        if (!$cliente) {
             $data = [
-                'message' => 'Ubicacion no encontrada',
+                'message' => 'Cliente no encontrado',
                 'status' => 404
             ];
             return response()->json($data, 404);
         }
 
         $validator = Validator::make($request->all(), [
-            'nombre_ubicacion' => 'max:255',
-            'capacidad' => 'integer',
-            'descripcion' => 'nullable'
+            'nombre_cliente' => 'max:255',
+            'ci_cliente' => 'max:30',
+            'telefono' => 'max:30',
+            'correo' => 'email|unique:Cliente',
         ]);
 
         if ($validator->fails()) {
@@ -174,23 +178,27 @@ class UbicacionController extends Controller
             return response()->json($data, 400);
         }
 
-        if ($request->has('nombre_ubicacion')) {
-            $ubicacion->nombre_ubicacion = $request->nombre_ubicacion;
+        if ($request->has('nombre_cliente')) {
+            $cliente->nombre_cliente = $request->nombre_cliente;
         }
 
-        if ($request->has('capacidad')) {
-            $ubicacion->capacidad = $request->capacidad;
+        if ($request->has('ci_cliente')) {
+            $cliente->ci_cliente = $request->ci_cliente;
         }
 
-        if ($request->has('descripcion')) {
-            $ubicacion->descripcion = $request->descripcion;
+        if ($request->has('telefono')) {
+            $cliente->telefono = $request->telefono;
         }
 
-        $ubicacion->save();
+        if ($request->has('correo')) {
+            $cliente->correo = $request->correo;
+        }
+
+        $cliente->save();
 
         $data = [
-            'message' => 'Ubicacion actualizada',
-            'Ubicaciones' => $ubicacion,
+            'message' => 'Cliente actualizado',
+            'Clientes' => $cliente,
             'status' => 200
         ];
         return response()->json($data, 200);
