@@ -10,11 +10,26 @@ use Illuminate\Support\Facades\Validator;
 class ClienteController extends Controller
 {
     //mostrar todos los datos
-    public function index()
+    public function index(Request $request)
     {
-        $cliente = Cliente::paginate(5);
+        $query = Cliente::query(); // Inicia una consulta sobre el modelo Cliente
+
+        // Filtrar por nombre_cliente
+        if ($request->has('nombre_cliente')) {
+            $query->where('nombre_cliente', 'like', '%' . $request->nombre_cliente . '%');
+        }
+
+        $clientes = $query->paginate(5); // Paginación de 5 por página
+
+        if ($clientes->isEmpty()) {
+            return response()->json([
+                'message' => 'No se encontró ningún cliente con ese nombre.',
+                'status' => 404
+            ], 404);
+        }
+
         $data = [
-            'Clientes' => $cliente,
+            'Clientes' => $clientes,
             'status' => 200
         ];
 
