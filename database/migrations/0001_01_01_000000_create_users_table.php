@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre');
-            $table->string('rol');
+            $table->string('nombre_user');
+            $table->enum('rol' , ['administrador', 'moderador']);
+            $table->string('ci_user')->unique();
             $table->string('email')->unique();
             $table->string('password');
             $table->rememberToken(); 
@@ -36,6 +37,7 @@ return new class extends Migration
             $table->integer('last_activity')->index();
         });
     }
+
 
     /**
      * Reverse the migrations.

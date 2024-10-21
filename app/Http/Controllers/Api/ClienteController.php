@@ -6,6 +6,274 @@ use App\Models\Cliente;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+use OpenApi\Annotations as OA;
+
+/**
+ * @OA\Schema(
+ *     schema="Cliente",
+ *     type="object",
+ *     required={"nombre_cliente", "ci_cliente", "telefono", "correo"},
+ *     @OA\Property(property="id", type="integer", format="int64", description="ID del cliente"),
+ *     @OA\Property(property="nombre_cliente", type="string", description="Nombre del cliente"),
+ *     @OA\Property(property="ci_cliente", type="string", description="Cédula de identidad del cliente"),
+ *     @OA\Property(property="telefono", type="string", description="Teléfono del cliente"),
+ *     @OA\Property(property="correo", type="string", format="email", description="Correo electrónico del cliente"),
+ *     @OA\Property(property="created_at", type="string", format="date-time", description="Fecha de creación"),
+ *     @OA\Property(property="updated_at", type="string", format="date-time", description="Fecha de actualización")
+ * )
+ */
+
+/**
+ * 
+ * 
+ * 
+ * @OA\Tag(
+ *     name="Clientes",
+ *     description="Operaciones relacionadas con los clientes"
+ * )
+ */
+
+/**
+ * @OA\Get(
+ *     path="/api/clientes",
+ *     tags={"Clientes"},
+ *     summary="Listar todos los clientes",
+ *     description="Obtiene una lista de todos los clientes. Se puede aplicar un filtro por nombre.",
+ *     operationId="getClientes",
+ *     @OA\Parameter(
+ *         name="nombre_cliente",
+ *         in="query",
+ *         description="Filtrar clientes por nombre",
+ *         required=false,
+ *         @OA\Schema(type="string")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Lista de clientes obtenida exitosamente",
+ *         @OA\JsonContent(
+ *             @OA\Property(
+ *                 property="Clientes",
+ *                 type="array",
+ *                 @OA\Items(ref="#/components/schemas/Cliente")
+ *             ),
+ *             @OA\Property(property="status", type="integer")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="No se encontró ningún cliente con ese nombre.",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="message", type="string"),
+ *             @OA\Property(property="status", type="integer")
+ *         )
+ *     )
+ * )
+ */
+
+/**
+ * @OA\Post(
+ *     path="/api/clientes",
+ *     tags={"Clientes"},
+ *     summary="Crear un nuevo cliente",
+ *     description="Registrar un nuevo cliente en el sistema.",
+ *     operationId="createCliente",
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             @OA\Property(property="nombre_cliente", type="string", example="Juan Pérez"),
+ *             @OA\Property(property="ci_cliente", type="string", example="12345678"),
+ *             @OA\Property(property="telefono", type="string", example="987654321"),
+ *             @OA\Property(property="correo", type="string", example="juan.perez@example.com")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=201,
+ *         description="Cliente creado exitosamente",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="Clientes", ref="#/components/schemas/Cliente"),
+ *             @OA\Property(property="status", type="integer")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=400,
+ *         description="Error en la validación de los datos",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="message", type="string"),
+ *             @OA\Property(property="errors", type="object"),
+ *             @OA\Property(property="status", type="integer")
+ *         )
+ *     )
+ * )
+ */
+
+/**
+ * @OA\Get(
+ *     path="/api/clientes/{id}",
+ *     tags={"Clientes"},
+ *     summary="Obtener un cliente específico",
+ *     description="Recuperar los detalles de un cliente por su ID.",
+ *     operationId="getClienteById",
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         description="ID del cliente a obtener",
+ *         required=true,
+ *         @OA\Schema(type="integer")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Cliente encontrado exitosamente",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="Clientes", ref="#/components/schemas/Cliente"),
+ *             @OA\Property(property="status", type="integer")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="Cliente no encontrado",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="message", type="string"),
+ *             @OA\Property(property="status", type="integer")
+ *         )
+ *     )
+ * )
+ */
+
+/**
+ * @OA\Delete(
+ *     path="/api/clientes/{id}",
+ *     tags={"Clientes"},
+ *     summary="Eliminar un cliente",
+ *     description="Eliminar un cliente existente por su ID.",
+ *     operationId="deleteCliente",
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         description="ID del cliente a eliminar",
+ *         required=true,
+ *         @OA\Schema(type="integer")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Cliente eliminado exitosamente",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="message", type="string"),
+ *             @OA\Property(property="status", type="integer")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="Cliente no encontrado",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="message", type="string"),
+ *             @OA\Property(property="status", type="integer")
+ *         )
+ *     )
+ * )
+ */
+
+/**
+ * @OA\Put(
+ *     path="/api/clientes/{id}",
+ *     tags={"Clientes"},
+ *     summary="Actualizar un cliente",
+ *     description="Actualizar un cliente existente por su ID.",
+ *     operationId="updateCliente",
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         description="ID del cliente a actualizar",
+ *         required=true,
+ *         @OA\Schema(type="integer")
+ *     ),
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             @OA\Property(property="nombre_cliente", type="string", example="Juan Pérez"),
+ *             @OA\Property(property="ci_cliente", type="string", example="12345678"),
+ *             @OA\Property(property="telefono", type="string", example="987654321"),
+ *             @OA\Property(property="correo", type="string", example="juan.perez@example.com")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Cliente actualizado exitosamente",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="Clientes", ref="#/components/schemas/Cliente"),
+ *             @OA\Property(property="status", type="integer")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="Cliente no encontrado",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="message", type="string"),
+ *             @OA\Property(property="status", type="integer")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=400,
+ *         description="Error en la validación de los datos",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="message", type="string"),
+ *             @OA\Property(property="errors", type="object"),
+ *             @OA\Property(property="status", type="integer")
+ *         )
+ *     )
+ * )
+ */
+
+/**
+ * @OA\Patch(
+ *     path="/api/clientes/{id}/actualizar-parcial",
+ *     tags={"Clientes"},
+ *     summary="Actualizar parcialmente un cliente",
+ *     description="Actualizar un cliente existente parcialmente por su ID.",
+ *     operationId="updatePartialCliente",
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         description="ID del cliente a actualizar",
+ *         required=true,
+ *         @OA\Schema(type="integer")
+ *     ),
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             @OA\Property(property="nombre_cliente", type="string", example="Juan Pérez"),
+ *             @OA\Property(property="ci_cliente", type="string", example="12345678"),
+ *             @OA\Property(property="telefono", type="string", example="987654321"),
+ *             @OA\Property(property="correo", type="string", example="juan.perez@example.com")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Cliente actualizado parcialmente exitosamente",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="Clientes", ref="#/components/schemas/Cliente"),
+ *             @OA\Property(property="status", type="integer")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="Cliente no encontrado",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="message", type="string"),
+ *             @OA\Property(property="status", type="integer")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=400,
+ *         description="Error en la validación de los datos",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="message", type="string"),
+ *             @OA\Property(property="errors", type="object"),
+ *             @OA\Property(property="status", type="integer")
+ *         )
+ *     )
+ * )
+ */
+
 
 class ClienteController extends Controller
 {

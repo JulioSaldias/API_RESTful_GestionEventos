@@ -6,6 +6,223 @@ use App\Models\Ubicacion;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+use OpenApi\Annotations as OA;
+
+
+/**
+ * @OA\Schema(
+ *     schema="Ubicacion",
+ *     type="object",
+ *     title="Ubicacion",
+ *     description="Modelo de la ubicación",
+ *     @OA\Property(property="id_ubicacion", type="integer", example=1),
+ *     @OA\Property(property="nombre_ubicacion", type="string", example="Sala A"),
+ *     @OA\Property(property="capacidad", type="integer", example=100),
+ *     @OA\Property(property="descripcion", type="string", example="Ubicación principal para eventos"),
+ * )
+ */
+
+
+
+/**
+ * @OA\Tag(
+ *     name="Ubicaciones",
+ *     description="Operaciones relacionadas con las ubicaciones"
+ * )
+ */
+
+/**
+ * @OA\Get(
+ *     path="/api/ubicaciones",
+ *     tags={"Ubicaciones"},
+ *     summary="Mostrar todas las ubicaciones",
+ *     @OA\Response(
+ *         response=200,
+ *         description="Lista de ubicaciones",
+ *         @OA\JsonContent(ref="#/components/schemas/Ubicacion")
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="No se encontraron ubicaciones",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="message", type="string", example="No se encontró ninguna mesa con esa capacidad."),
+ *             @OA\Property(property="status", type="integer", example=404)
+ *         )
+ *     )
+ * )
+ */
+
+/**
+ * @OA\Post(
+ *     path="/api/ubicaciones",
+ *     tags={"Ubicaciones"},
+ *     summary="Agregar una nueva ubicación",
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             @OA\Property(property="nombre_ubicacion", type="string", example="Sala A"),
+ *             @OA\Property(property="capacidad", type="integer", example=100),
+ *             @OA\Property(property="descripcion", type="string", example="Ubicación principal para eventos")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=201,
+ *         description="Ubicación creada con éxito",
+ *         @OA\JsonContent(ref="#/components/schemas/Ubicacion")
+ *     ),
+ *     @OA\Response(
+ *         response=400,
+ *         description="Error en la validación de los datos",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="message", type="string", example="Error en la validación de los datos"),
+ *             @OA\Property(property="status", type="integer", example=400)
+ *         )
+ *     )
+ * )
+ */
+
+/**
+ * @OA\Get(
+ *     path="/api/ubicaciones/{id}",
+ *     tags={"Ubicaciones"},
+ *     summary="Mostrar una ubicación específica",
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         @OA\Schema(type="integer")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Ubicación encontrada",
+ *         @OA\JsonContent(ref="#/components/schemas/Ubicacion")
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="Ubicación no encontrada",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="message", type="string", example="Ubicacion no encontrada"),
+ *             @OA\Property(property="status", type="integer", example=404)
+ *         )
+ *     )
+ * )
+ */
+
+/**
+ * @OA\Delete(
+ *     path="/api/ubicaciones/{id}",
+ *     tags={"Ubicaciones"},
+ *     summary="Eliminar una ubicación",
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         @OA\Schema(type="integer")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Ubicación eliminada",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="message", type="string", example="Ubicacion eliminada"),
+ *             @OA\Property(property="status", type="integer", example=200)
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="Ubicación no encontrada",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="message", type="string", example="Ubicacion no encontrada"),
+ *             @OA\Property(property="status", type="integer", example=404)
+ *         )
+ *     )
+ * )
+ */
+
+/**
+ * @OA\Put(
+ *     path="/api/ubicaciones/{id}",
+ *     tags={"Ubicaciones"},
+ *     summary="Actualizar una ubicación",
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         @OA\Schema(type="integer")
+ *     ),
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             @OA\Property(property="nombre_ubicacion", type="string", example="Sala A"),
+ *             @OA\Property(property="capacidad", type="integer", example=100),
+ *             @OA\Property(property="descripcion", type="string", example="Ubicación principal para eventos")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Ubicación actualizada",
+ *         @OA\JsonContent(ref="#/components/schemas/Ubicacion")
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="Ubicación no encontrada",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="message", type="string", example="Ubicacion no encontrada"),
+ *             @OA\Property(property="status", type="integer", example=404)
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=400,
+ *         description="Error en la validación de los datos",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="message", type="string", example="Error en la validación de los datos"),
+ *             @OA\Property(property="status", type="integer", example=400)
+ *         )
+ *     )
+ * )
+ */
+
+/**
+ * @OA\Patch(
+ *     path="/api/ubicaciones/{id}",
+ *     tags={"Ubicaciones"},
+ *     summary="Actualizar parcialmente una ubicación",
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         @OA\Schema(type="integer")
+ *     ),
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             @OA\Property(property="nombre_ubicacion", type="string", example="Sala A"),
+ *             @OA\Property(property="capacidad", type="integer", example=100),
+ *             @OA\Property(property="descripcion", type="string", example="Ubicación principal para eventos")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Ubicación actualizada",
+ *         @OA\JsonContent(ref="#/components/schemas/Ubicacion")
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="Ubicación no encontrada",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="message", type="string", example="Ubicacion no encontrada"),
+ *             @OA\Property(property="status", type="integer", example=404)
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=400,
+ *         description="Error en la validación de los datos",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="message", type="string", example="Error en la validación de los datos"),
+ *             @OA\Property(property="status", type="integer", example=400)
+ *         )
+ *     )
+ * )
+ */
 
 class UbicacionController extends Controller
 {

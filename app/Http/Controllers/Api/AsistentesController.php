@@ -8,6 +8,110 @@ use App\Models\Ubicacion;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+use OpenApi\Annotations as OA;
+
+/**
+ * @OA\Tag(
+ *     name="Asistentes",
+ *     description="Operaciones relacionadas con asistentes"
+ * )
+ */
+
+/**
+ * @OA\Schema(
+ *     schema="Asistente",
+ *     type="object",
+ *     required={"nombre_asistente", "ci_asistente", "telefono", "id_evento", "id_ubicacion"},
+ *     @OA\Property(property="id", type="integer", format="int64", description="ID del asistente"),
+ *     @OA\Property(property="nombre_asistente", type="string", description="Nombre del asistente"),
+ *     @OA\Property(property="ci_asistente", type="string", description="Cédula de identidad del asistente"),
+ *     @OA\Property(property="telefono", type="string", description="Teléfono del asistente"),
+ *     @OA\Property(property="id_evento", type="integer", format="int64", description="ID del evento relacionado"),
+ *     @OA\Property(property="id_ubicacion", type="integer", format="int64", description="ID de la ubicación relacionada"),
+ *     @OA\Property(property="created_at", type="string", format="date-time", description="Fecha de creación"),
+ *     @OA\Property(property="updated_at", type="string", format="date-time", description="Fecha de actualización")
+ * )
+ */
+
+/**
+ * @OA\Get(
+ *     path="/api/asistentes",
+ *     tags={"Asistentes"},
+ *     summary="Mostrar todos los asistentes",
+ *     @OA\Response(response="200", description="Lista de asistentes", @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/Asistente"))),
+ *     @OA\Response(response="404", description="No se encontraron asistentes")
+ * )
+ */
+
+/**
+ * @OA\Post(
+ *     path="/api/asistentes",
+ *     tags={"Asistentes"},
+ *     summary="Crear un nuevo asistente",
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(ref="#/components/schemas/Asistente")
+ *     ),
+ *     @OA\Response(response="201", description="Asistente creado", @OA\JsonContent(ref="#/components/schemas/Asistente")),
+ *     @OA\Response(response="400", description="Error en la validación de los datos"),
+ *     @OA\Response(response="404", description="El evento o la ubicación no existen")
+ * )
+ */
+
+/**
+ * @OA\Get(
+ *     path="/api/asistentes/{id}",
+ *     tags={"Asistentes"},
+ *     summary="Mostrar un asistente específico",
+ *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+ *     @OA\Response(response="200", description="Asistente encontrado", @OA\JsonContent(ref="#/components/schemas/Asistente")),
+ *     @OA\Response(response="404", description="Asistente no encontrado")
+ * )
+ */
+
+/**
+ * @OA\Delete(
+ *     path="/api/asistentes/{id}",
+ *     tags={"Asistentes"},
+ *     summary="Eliminar un asistente",
+ *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+ *     @OA\Response(response="200", description="Asistente eliminado"),
+ *     @OA\Response(response="404", description="Asistente no encontrado")
+ * )
+ */
+
+/**
+ * @OA\Put(
+ *     path="/api/asistentes/{id}",
+ *     tags={"Asistentes"},
+ *     summary="Actualizar un asistente",
+ *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(ref="#/components/schemas/Asistente")
+ *     ),
+ *     @OA\Response(response="200", description="Asistente actualizado", @OA\JsonContent(ref="#/components/schemas/Asistente")),
+ *     @OA\Response(response="400", description="Error en la validación de los datos"),
+ *     @OA\Response(response="404", description="Asistente no encontrado")
+ * )
+ */
+
+/**
+ * @OA\Patch(
+ *     path="/api/asistentes/{id}/partial",
+ *     tags={"Asistentes"},
+ *     summary="Actualizar parcialmente un asistente",
+ *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(ref="#/components/schemas/Asistente")
+ *     ),
+ *     @OA\Response(response="200", description="Asistente actualizado", @OA\JsonContent(ref="#/components/schemas/Asistente")),
+ *     @OA\Response(response="400", description="Error en la validación de los datos"),
+ *     @OA\Response(response="404", description="Asistente no encontrado")
+ * )
+ */
+
 
 class AsistentesController extends Controller
 {

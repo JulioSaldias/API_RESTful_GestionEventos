@@ -1,11 +1,14 @@
 <?php
 
+use App\Http\Controllers\Api\userController;
 use App\Http\Controllers\Api\UbicacionController;
 use App\Http\Controllers\Api\ClienteController;
 use App\Http\Controllers\Api\EventoController;
 use App\Http\Controllers\Api\AsistentesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use OpenApi\Annotations as OA;
+
 
 //Ubicaciones
 Route::get('/Ubicaciones', [UbicacionController::class, 'index']);
@@ -63,3 +66,21 @@ Route::put('/Asistentes/{id}', [AsistentesController::class, 'update']);
 Route::patch('/Asistentes/{id}', [AsistentesController::class, 'updatePartial']);
 
 Route::delete('/Asistentes/{id}', [AsistentesController::class, 'destroy']);
+
+//usuario
+Route::get('/Usuarios', [userController::class, 'index']);
+
+Route::get('/Usuarios/{id}', [userController::class, 'show']);
+
+Route::post('/Usuarios', [userController::class, 'store']);
+
+Route::put('/Usuarios/{id}', [userController::class, 'update']);
+
+Route::patch('/Usuarios/{id}', [userController::class, 'updatePartial']);
+
+Route::delete('/Usuarios/{id}', [userController::class, 'destroy']);
+
+Route::get('/docs', function () {
+    return response()->json(file_get_contents(storage_path('api-docs/api-docs.json')));
+});
+
