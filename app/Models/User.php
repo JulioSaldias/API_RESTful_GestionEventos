@@ -18,9 +18,12 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'email',
+        'nombre',
         'password',
+        'rol',
+        'ci',
+        'telefono',
+        'fecha',
     ];
 
     /**
@@ -41,8 +44,8 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'fecha' => 'date', // Define el campo `fecha` como una fecha
+        'password' => 'hashed', // Laravel se encargará de encriptar la contraseña
         ];
     }
 }
