@@ -10,9 +10,24 @@ use Illuminate\Support\Facades\Validator;
 class UbicacionController extends Controller
 {
     //mostrar todos los datos
-    public function index()
+    public function index(Request $request)
     {
-        $ubicacion = Ubicacion::paginate(5);
+        $query = Ubicacion::query(); // Inicia una consulta sobre el modelo Evento
+
+        // Filtrar por tipo_evento
+        if ($request->has('capacidad')) {
+            $query->where('capacidad', 'like', '%' . $request->capacidad . '%');
+        }
+
+        $ubicacion = $query->paginate(5); // Paginación de 5 por página
+
+        if ($ubicacion->isEmpty()) {
+            return response()->json([
+                'message' => 'No se encontró ningúna mesa con esa capacidad.',
+                'status' => 404
+            ], 404);
+        }
+
         $data = [
             'Ubicaciones' => $ubicacion,
             'status' => 200
