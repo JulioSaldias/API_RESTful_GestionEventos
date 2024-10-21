@@ -18,7 +18,14 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+<<<<<<< Updated upstream
         'nombre',
+=======
+        'nombre_user',
+        'rol',
+        'ci_user',
+        'email',
+>>>>>>> Stashed changes
         'password',
         'rol',
         'ci',
@@ -44,8 +51,13 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
+<<<<<<< Updated upstream
             'fecha' => 'date', // Define el campo `fecha` como una fecha
         'password' => 'hashed', // Laravel se encargará de encriptar la contraseña
+=======
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed', //encripta comtraseña
+>>>>>>> Stashed changes
         ];
     }
 }

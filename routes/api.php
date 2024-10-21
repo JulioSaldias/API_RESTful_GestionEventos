@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\Api\UbicacionController;
 use App\Http\Controllers\Api\ClienteController;
+use App\Http\Controllers\Api\userController;
 use App\Models\Cliente;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -32,3 +34,16 @@ Route::put('/Clientes/{id}', [ClienteController::class, 'update']);
 Route::patch('/Clientes/{id}', [ClienteController::class, 'updatePartial']);
 
 Route::delete('/Clientes/{id}', [ClienteController::class, 'destroy']);
+
+//usuario
+Route::get('/users', [userController::class, 'index']);
+
+Route::get('/users/{id}', [userController::class, 'show']);
+
+Route::post('/users', [userController::class, 'store']);
+
+Route::put('/users/{id}', [userController::class, 'update']);
+
+Route::patch('/users/{id}', [userController::class, 'updatePartial']);
+
+Route::delete('/users/{id}', [userController::class, 'destroy']);
