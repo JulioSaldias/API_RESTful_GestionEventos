@@ -38,7 +38,11 @@ use OpenApi\Annotations as OA;
  *     path="/api/asistentes",
  *     tags={"Asistentes"},
  *     summary="Mostrar todos los asistentes",
- *     @OA\Response(response="200", description="Lista de asistentes", @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/Asistente"))),
+ *     @OA\Response(
+ *         response="200",
+ *         description="Lista de asistentes",
+ *         @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/Asistente"))
+ *     ),
  *     @OA\Response(response="404", description="No se encontraron asistentes")
  * )
  */
@@ -52,7 +56,11 @@ use OpenApi\Annotations as OA;
  *         required=true,
  *         @OA\JsonContent(ref="#/components/schemas/Asistente")
  *     ),
- *     @OA\Response(response="201", description="Asistente creado", @OA\JsonContent(ref="#/components/schemas/Asistente")),
+ *     @OA\Response(
+ *         response="201",
+ *         description="Asistente creado",
+ *         @OA\JsonContent(ref="#/components/schemas/Asistente")
+ *     ),
  *     @OA\Response(response="400", description="Error en la validación de los datos"),
  *     @OA\Response(response="404", description="El evento o la ubicación no existen")
  * )
@@ -63,8 +71,17 @@ use OpenApi\Annotations as OA;
  *     path="/api/asistentes/{id}",
  *     tags={"Asistentes"},
  *     summary="Mostrar un asistente específico",
- *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
- *     @OA\Response(response="200", description="Asistente encontrado", @OA\JsonContent(ref="#/components/schemas/Asistente")),
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         @OA\Schema(type="integer", format="int64")
+ *     ),
+ *     @OA\Response(
+ *         response="200",
+ *         description="Asistente encontrado",
+ *         @OA\JsonContent(ref="#/components/schemas/Asistente")
+ *     ),
  *     @OA\Response(response="404", description="Asistente no encontrado")
  * )
  */
@@ -74,7 +91,12 @@ use OpenApi\Annotations as OA;
  *     path="/api/asistentes/{id}",
  *     tags={"Asistentes"},
  *     summary="Eliminar un asistente",
- *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         @OA\Schema(type="integer", format="int64")
+ *     ),
  *     @OA\Response(response="200", description="Asistente eliminado"),
  *     @OA\Response(response="404", description="Asistente no encontrado")
  * )
@@ -85,12 +107,21 @@ use OpenApi\Annotations as OA;
  *     path="/api/asistentes/{id}",
  *     tags={"Asistentes"},
  *     summary="Actualizar un asistente",
- *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         @OA\Schema(type="integer", format="int64")
+ *     ),
  *     @OA\RequestBody(
  *         required=true,
  *         @OA\JsonContent(ref="#/components/schemas/Asistente")
  *     ),
- *     @OA\Response(response="200", description="Asistente actualizado", @OA\JsonContent(ref="#/components/schemas/Asistente")),
+ *     @OA\Response(
+ *         response="200",
+ *         description="Asistente actualizado",
+ *         @OA\JsonContent(ref="#/components/schemas/Asistente")
+ *     ),
  *     @OA\Response(response="400", description="Error en la validación de los datos"),
  *     @OA\Response(response="404", description="Asistente no encontrado")
  * )
@@ -101,12 +132,21 @@ use OpenApi\Annotations as OA;
  *     path="/api/asistentes/{id}/partial",
  *     tags={"Asistentes"},
  *     summary="Actualizar parcialmente un asistente",
- *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         @OA\Schema(type="integer", format="int64")
+ *     ),
  *     @OA\RequestBody(
  *         required=true,
  *         @OA\JsonContent(ref="#/components/schemas/Asistente")
  *     ),
- *     @OA\Response(response="200", description="Asistente actualizado", @OA\JsonContent(ref="#/components/schemas/Asistente")),
+ *     @OA\Response(
+ *         response="200",
+ *         description="Asistente actualizado",
+ *         @OA\JsonContent(ref="#/components/schemas/Asistente")
+ *     ),
  *     @OA\Response(response="400", description="Error en la validación de los datos"),
  *     @OA\Response(response="404", description="Asistente no encontrado")
  * )
@@ -148,7 +188,7 @@ class AsistentesController extends Controller
             'nombre_asistente' => 'required|string',
             'ci_asistente' => 'required|string|unique:asistentes',
             'telefono' => 'required|string|unique:asistentes',
-            'id_evento' => 'required|exists:evento,id_evento',  // Asegúrate que la tabla es "evento"
+            'id_evento' => 'required|exists:evento,id_evento', 
             'id_ubicacion' => 'required|exists:ubicacion,id_ubicacion'
         ]);
 

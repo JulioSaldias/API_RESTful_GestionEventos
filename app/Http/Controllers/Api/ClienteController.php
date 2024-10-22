@@ -24,9 +24,6 @@ use OpenApi\Annotations as OA;
  */
 
 /**
- * 
- * 
- * 
  * @OA\Tag(
  *     name="Clientes",
  *     description="Operaciones relacionadas con los clientes"
@@ -257,7 +254,7 @@ use OpenApi\Annotations as OA;
  *     @OA\Response(
  *         response=404,
  *         description="Cliente no encontrado",
- *         @OA\JsonContent(
+ *@OA\JsonContent(
  *             @OA\Property(property="message", type="string"),
  *             @OA\Property(property="status", type="integer")
  *         )
@@ -273,7 +270,6 @@ use OpenApi\Annotations as OA;
  *     )
  * )
  */
-
 
 class ClienteController extends Controller
 {
@@ -308,9 +304,9 @@ class ClienteController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'nombre_cliente' => 'required|max:255',
-            'ci_cliente' => 'required|max:30',
-            'telefono' => 'required|max:30',
-            'correo' => 'required|email|unique:Cliente'
+            'ci_cliente' => 'required|unique:Cliente|max:20',
+            'telefono' => 'required|unique:Cliente|max:30',
+            'correo' => 'required|email|unique:Cliente|max:255'
         ]);
 
         if ($validator->fails()) {
@@ -402,9 +398,9 @@ class ClienteController extends Controller
 
         $validator = Validator::make($request->all(), [
             'nombre_cliente' => 'required|max:255',
-            'ci_cliente' => 'required|max:30',
-            'telefono' => 'required|max:30',
-            'correo' => 'required|email|unique:Cliente'
+            'ci_cliente' => 'required|unique:Cliente|max:20',
+            'telefono' => 'required|unique:Cliente|max:30',
+            'correo' => 'required|email|unique:Cliente|max:255'
         ]);
 
         if ($validator->fails()) {
@@ -447,9 +443,9 @@ class ClienteController extends Controller
 
         $validator = Validator::make($request->all(), [
             'nombre_cliente' => 'max:255',
-            'ci_cliente' => 'max:30',
-            'telefono' => 'max:30',
-            'correo' => 'email|unique:Cliente',
+            'ci_cliente' => 'unique:Cliente|max:20',
+            'telefono' => 'unique:Cliente|max:30',
+            'correo' => 'email|unique:Cliente|max:255'
         ]);
 
         if ($validator->fails()) {

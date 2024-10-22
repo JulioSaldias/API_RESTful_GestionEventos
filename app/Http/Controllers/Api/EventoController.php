@@ -26,15 +26,11 @@ use OpenApi\Annotations as OA;
  */
 
 /**
- * 
- * 
- * 
  * @OA\Tag(
  *     name="Eventos",
  *     description="Operaciones relacionadas con los eventos"
  * )
  */
-
 
 /**
  * @OA\Get(
@@ -84,9 +80,9 @@ use OpenApi\Annotations as OA;
  *         required=true,
  *         @OA\JsonContent(
  *             type="object",
- *             @OA\Property(property="nombre_evento", type="string", example="Concierto de Rock"),
- *             @OA\Property(property="descripcion", type="string", example="Un gran concierto de rock en la ciudad."),
- *             @OA\Property(property="tipo_evento", type="string", example="Concierto"),
+ *             @OA\Property(property="nombre_evento", type="string", example="Rodrigo y Daniela"),
+ *             @OA\Property(property="descripcion", type="string", example="Boda Rustica"),
+ *             @OA\Property(property="tipo_evento", type="string", example="Matrimoonio"),
  *             @OA\Property(property="fecha_conclusion", type="string", format="date", example="2024-12-31")
  *         )
  *     ),
@@ -272,13 +268,8 @@ use OpenApi\Annotations as OA;
  *         @OA\Schema(type="integer")
  *     ),
  *     @OA\Response(
- *         response=200,
- *         description="Evento eliminado exitosamente",
- *         @OA\JsonContent(
- *             type="object",
- *             @OA\Property(property="message", type="string"),
- *             @OA\Property(property="status", type="integer")
- *         )
+ *         response=204,
+ *         description="Evento eliminado exitosamente"
  *     ),
  *     @OA\Response(
  *         response=404,
@@ -352,9 +343,9 @@ class EventoController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'nombre_evento' => 'required|string',
+            'nombre_evento' => 'required|string|max:255',
             'descripcion' => 'nullable',
-            'tipo_evento' => 'required|string',
+            'tipo_evento' => 'required|string|max:255',
             'fecha_conclusion' => 'required|date'
         ]);
         if ($validator->fails()) {
@@ -444,9 +435,9 @@ class EventoController extends Controller
         }
 
         $validator = Validator::make($request->all(), [
-            'nombre_evento' => 'required|string',
+            'nombre_evento' => 'required|string|max:255',
             'descripcion' => 'nullable',
-            'tipo_evento' => 'required|string',
+            'tipo_evento' => 'required|string|max:255',
             'fecha_conclusion' => 'required|date'
         ]);
 
