@@ -82,7 +82,7 @@ use OpenApi\Annotations as OA;
  *             type="object",
  *             @OA\Property(property="nombre_evento", type="string", example="Rodrigo y Daniela"),
  *             @OA\Property(property="descripcion", type="string", example="Boda Rustica"),
- *             @OA\Property(property="tipo_evento", type="string", example="Matrimoonio"),
+ *             @OA\Property(property="tipo_evento", type="string", example="Matrimonio"),
  *             @OA\Property(property="fecha_conclusion", type="string", format="date", example="2024-12-31")
  *         )
  *     ),
@@ -309,10 +309,10 @@ class EventoController extends Controller
     }
 
     //mostrar todos los datos
+    //mostrar todos los datos
     public function index(Request $request)
     {
         $tipo_evento = $request->query('tipo_evento');
-
         // Construir la consulta con o sin el filtro
         if ($tipo_evento) {
             // Filtrar por coincidencia exacta de tipo_evento
@@ -328,16 +328,22 @@ class EventoController extends Controller
         } else {
             // Si no hay filtro, simplemente paginar todos los eventos
             $evento = Evento::paginate(5);
-        }
 
-        // Enviar la respuesta con los eventos encontrados o paginados
+            // Si no se encontraron eventos en general, devolver mensaje
+            if ($evento->isEmpty()) {
+                return response()->json([
+                    'message' => 'No hay eventos creados todavía.',
+                    'status' => 200
+                ], 200);
+            }
+        }
         $data = [
             'Eventos' => $evento,
             'status' => 200
         ];
-
         return response()->json($data, 200);
     }
+
 
     //ingresar datos
     public function store(Request $request)

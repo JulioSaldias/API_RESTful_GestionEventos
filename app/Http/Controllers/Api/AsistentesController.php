@@ -140,7 +140,11 @@ use OpenApi\Annotations as OA;
  *     ),
  *     @OA\RequestBody(
  *         required=true,
- *         @OA\JsonContent(ref="#/components/schemas/Asistente")
+ *         @OA\JsonContent(
+ *             @OA\Property(property="nombre_asistente", type="string", example="Juan Pérez"),
+ *             @OA\Property(property="ci_asistente", type="string", example="12345678"),
+ *             @OA\Property(property="telefono", type="string", example="987654321")
+ *         )
  *     ),
  *     @OA\Response(
  *         response="200",
@@ -152,33 +156,45 @@ use OpenApi\Annotations as OA;
  * )
  */
 
-
 class AsistentesController extends Controller
 {
     //mostrar todos los datos
     public function index(Request $request)
     {
-        $query = Asistentes::query();
+        $query = Asistentes::query(); // Inicia una consulta sobre el modelo Asistentes
+    
+        // Filtrar por nombre_asistente
         if ($request->has('nombre_asistente')) {
             $query->where('nombre_asistente', 'like', '%' . $request->nombre_asistente . '%');
         }
-
-        $asistente = $query->paginate(5); 
-
-        if ($asistente->isEmpty()) {
+    
+        $asistentes = $query->paginate(5); // Paginación de 5 por página
+    
+        // Verificar si no hay asistentes con el filtro aplicado
+        if ($request->has('nombre_asistente') && $asistentes->isEmpty()) {
             return response()->json([
                 'message' => 'No se encontró ningún asistente con ese nombre.',
                 'status' => 404
             ], 404);
         }
-
+    
+        // Verificar si no hay asistentes en general
+        if (!$request->has('nombre_asistente') && $asistentes->isEmpty()) {
+            return response()->json([
+                'message' => 'No hay asistentes creados todavía.',
+                'status' => 200
+            ], 200);
+        }
+    
+        // Enviar la respuesta con los asistentes encontrados o paginados
         $data = [
-            'Asistentes' => $asistente,
+            'Asistentes' => $asistentes,
             'status' => 200
         ];
-
+    
         return response()->json($data, 200);
     }
+    
 
     //ingresar datos
     public function store(Request $request)

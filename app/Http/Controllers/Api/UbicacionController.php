@@ -22,8 +22,6 @@ use OpenApi\Annotations as OA;
  * )
  */
 
-
-
 /**
  * @OA\Tag(
  *     name="Ubicaciones",
@@ -39,13 +37,13 @@ use OpenApi\Annotations as OA;
  *     @OA\Response(
  *         response=200,
  *         description="Lista de ubicaciones",
- *         @OA\JsonContent(ref="#/components/schemas/Ubicacion")
+ *         @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/Ubicacion"))
  *     ),
  *     @OA\Response(
  *         response=404,
  *         description="No se encontraron ubicaciones",
  *         @OA\JsonContent(
- *             @OA\Property(property="message", type="string", example="No se encontró ninguna mesa con esa capacidad."),
+ *             @OA\Property(property="message", type="string", example="No se encontró ninguna ubicación con esa capacidad."),
  *             @OA\Property(property="status", type="integer", example=404)
  *         )
  *     )
@@ -229,29 +227,40 @@ class UbicacionController extends Controller
     //mostrar todos los datos
     public function index(Request $request)
     {
-        $query = Ubicacion::query(); // Inicia una consulta sobre el modelo Evento
-
-        // Filtrar por tipo_evento
+        $query = Ubicacion::query(); // Inicia una consulta sobre el modelo Ubicacion
+    
+        // Filtrar por capacidad
         if ($request->has('capacidad')) {
             $query->where('capacidad', 'like', '%' . $request->capacidad . '%');
         }
-
-        $ubicacion = $query->paginate(5); // Paginación de 5 por página
-
-        if ($ubicacion->isEmpty()) {
+    
+        $ubicaciones = $query->paginate(5); // Paginación de 5 por página
+    
+        // Verificar si no hay ubicaciones con el filtro aplicado
+        if ($request->has('capacidad') && $ubicaciones->isEmpty()) {
             return response()->json([
-                'message' => 'No se encontró ningúna mesa con esa capacidad.',
+                'message' => 'No se encontró ninguna ubicación con esa capacidad.',
                 'status' => 404
             ], 404);
         }
-
+    
+        // Verificar si no hay ubicaciones en general
+        if (!$request->has('capacidad') && $ubicaciones->isEmpty()) {
+            return response()->json([
+                'message' => 'No hay ubicaciones creadas todavía.',
+                'status' => 200
+            ], 200);
+        }
+    
+        // Enviar la respuesta con las ubicaciones encontradas o paginadas
         $data = [
-            'Ubicaciones' => $ubicacion,
+            'Ubicaciones' => $ubicaciones,
             'status' => 200
         ];
-
+    
         return response()->json($data, 200);
     }
+    
     //ingresar datos
     public function store(Request $request)
     {

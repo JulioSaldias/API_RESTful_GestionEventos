@@ -76,12 +76,7 @@ use OpenApi\Annotations as OA;
  *     operationId="createCliente",
  *     @OA\RequestBody(
  *         required=true,
- *         @OA\JsonContent(
- *             @OA\Property(property="nombre_cliente", type="string", example="Juan Pérez"),
- *             @OA\Property(property="ci_cliente", type="string", example="12345678"),
- *             @OA\Property(property="telefono", type="string", example="987654321"),
- *             @OA\Property(property="correo", type="string", example="juan.perez@example.com")
- *         )
+ *         @OA\JsonContent(ref="#/components/schemas/Cliente")
  *     ),
  *     @OA\Response(
  *         response=201,
@@ -185,12 +180,7 @@ use OpenApi\Annotations as OA;
  *     ),
  *     @OA\RequestBody(
  *         required=true,
- *         @OA\JsonContent(
- *             @OA\Property(property="nombre_cliente", type="string", example="Juan Pérez"),
- *             @OA\Property(property="ci_cliente", type="string", example="12345678"),
- *             @OA\Property(property="telefono", type="string", example="987654321"),
- *             @OA\Property(property="correo", type="string", example="juan.perez@example.com")
- *         )
+ *         @OA\JsonContent(ref="#/components/schemas/Cliente")
  *     ),
  *     @OA\Response(
  *         response=200,
@@ -254,7 +244,7 @@ use OpenApi\Annotations as OA;
  *     @OA\Response(
  *         response=404,
  *         description="Cliente no encontrado",
- *@OA\JsonContent(
+ *         @OA\JsonContent(
  *             @OA\Property(property="message", type="string"),
  *             @OA\Property(property="status", type="integer")
  *         )
@@ -285,13 +275,23 @@ class ClienteController extends Controller
 
         $clientes = $query->paginate(5); // Paginación de 5 por página
 
-        if ($clientes->isEmpty()) {
+        // Verificar si no hay clientes con el filtro aplicado
+        if ($request->has('nombre_cliente') && $clientes->isEmpty()) {
             return response()->json([
                 'message' => 'No se encontró ningún cliente con ese nombre.',
                 'status' => 404
             ], 404);
         }
 
+        // Verificar si no hay clientes en general
+        if (!$request->has('nombre_cliente') && $clientes->isEmpty()) {
+            return response()->json([
+                'message' => 'No hay clientes creados todavía.',
+                'status' => 200
+            ], 200);
+        }
+
+        // Enviar la respuesta con los clientes encontrados o paginados
         $data = [
             'Clientes' => $clientes,
             'status' => 200
@@ -299,6 +299,7 @@ class ClienteController extends Controller
 
         return response()->json($data, 200);
     }
+
     //ingresar datos
     public function store(Request $request)
     {

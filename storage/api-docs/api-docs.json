@@ -196,7 +196,21 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/Asistente"
+                                "properties": {
+                                    "nombre_asistente": {
+                                        "type": "string",
+                                        "example": "Juan Pérez"
+                                    },
+                                    "ci_asistente": {
+                                        "type": "string",
+                                        "example": "12345678"
+                                    },
+                                    "telefono": {
+                                        "type": "string",
+                                        "example": "987654321"
+                                    }
+                                },
+                                "type": "object"
                             }
                         }
                     }
@@ -294,25 +308,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "properties": {
-                                    "nombre_cliente": {
-                                        "type": "string",
-                                        "example": "Juan Pérez"
-                                    },
-                                    "ci_cliente": {
-                                        "type": "string",
-                                        "example": "12345678"
-                                    },
-                                    "telefono": {
-                                        "type": "string",
-                                        "example": "987654321"
-                                    },
-                                    "correo": {
-                                        "type": "string",
-                                        "example": "juan.perez@example.com"
-                                    }
-                                },
-                                "type": "object"
+                                "$ref": "#/components/schemas/Cliente"
                             }
                         }
                     }
@@ -441,25 +437,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "properties": {
-                                    "nombre_cliente": {
-                                        "type": "string",
-                                        "example": "Juan Pérez"
-                                    },
-                                    "ci_cliente": {
-                                        "type": "string",
-                                        "example": "12345678"
-                                    },
-                                    "telefono": {
-                                        "type": "string",
-                                        "example": "987654321"
-                                    },
-                                    "correo": {
-                                        "type": "string",
-                                        "example": "juan.perez@example.com"
-                                    }
-                                },
-                                "type": "object"
+                                "$ref": "#/components/schemas/Cliente"
                             }
                         }
                     }
@@ -774,7 +752,7 @@
                                     },
                                     "tipo_evento": {
                                         "type": "string",
-                                        "example": "Matrimoonio"
+                                        "example": "Matrimonio"
                                     },
                                     "fecha_conclusion": {
                                         "type": "string",
@@ -1149,7 +1127,10 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Ubicacion"
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Ubicacion"
+                                    }
                                 }
                             }
                         }
@@ -1162,7 +1143,7 @@
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "No se encontró ninguna mesa con esa capacidad."
+                                            "example": "No se encontró ninguna ubicación con esa capacidad."
                                         },
                                         "status": {
                                             "type": "integer",
@@ -1531,14 +1512,79 @@
                 }
             }
         },
-        "/api/Usuarios": {
+        "/api/login": {
+            "post": {
+                "tags": [
+                    "Usuarios"
+                ],
+                "summary": "Iniciar sesión",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login exitoso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "user": {
+                                            "$ref": "#/components/schemas/User"
+                                        },
+                                        "status": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Credenciales incorrectas",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "status": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/usuarios": {
             "get": {
                 "tags": [
                     "Usuarios"
                 ],
-                "summary": "Listar todos los usuarios",
-                "description": "Obtener una lista de todos los usuarios. Se puede aplicar un filtro por rol.",
-                "operationId": "getUsuarios",
+                "summary": "Mostrar todos los usuarios",
                 "parameters": [
                     {
                         "name": "rol",
@@ -1552,7 +1598,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Lista de usuarios obtenida exitosamente",
+                        "description": "Lista de usuarios",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1573,7 +1619,7 @@
                         }
                     },
                     "404": {
-                        "description": "No se encontró ningún usuario con ese rol.",
+                        "description": "No se encontró ningún usuario con ese rol",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1597,8 +1643,6 @@
                     "Usuarios"
                 ],
                 "summary": "Crear un nuevo usuario",
-                "description": "Registrar un nuevo usuario en el sistema.",
-                "operationId": "createUsuario",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -1606,24 +1650,19 @@
                             "schema": {
                                 "properties": {
                                     "nombre_user": {
-                                        "type": "string",
-                                        "example": "Juan Pérez"
+                                        "type": "string"
                                     },
                                     "rol": {
-                                        "type": "string",
-                                        "example": "administrador"
+                                        "type": "string"
                                     },
                                     "ci_user": {
-                                        "type": "string",
-                                        "example": "12345678"
+                                        "type": "string"
                                     },
                                     "email": {
-                                        "type": "string",
-                                        "example": "juan.perez@example.com"
+                                        "type": "string"
                                     },
                                     "password": {
-                                        "type": "string",
-                                        "example": "secreta123"
+                                        "type": "string"
                                     }
                                 },
                                 "type": "object"
@@ -1640,6 +1679,9 @@
                                     "properties": {
                                         "Usuarios": {
                                             "$ref": "#/components/schemas/User"
+                                        },
+                                        "token": {
+                                            "type": "string"
                                         },
                                         "status": {
                                             "type": "integer"
@@ -1674,19 +1716,17 @@
                 }
             }
         },
-        "/api/Usuarios/{id}": {
+        "/api/usuarios/{id}": {
             "get": {
                 "tags": [
                     "Usuarios"
                 ],
-                "summary": "Obtener un usuario específico",
-                "description": "Recuperar los detalles de un usuario por su ID.",
-                "operationId": "getUsuarioById",
+                "summary": "Mostrar un usuario específico",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "ID del usuario a obtener",
+                        "description": "ID del usuario",
                         "required": true,
                         "schema": {
                             "type": "integer"
@@ -1695,7 +1735,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Usuario encontrado exitosamente",
+                        "description": "Usuario encontrado",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1736,14 +1776,12 @@
                 "tags": [
                     "Usuarios"
                 ],
-                "summary": "Actualizar un usuario",
-                "description": "Actualizar todos los datos de un usuario existente.",
-                "operationId": "updateUsuario",
+                "summary": "Actualizar un usuario existente",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "ID del usuario a actualizar",
+                        "description": "ID del usuario",
                         "required": true,
                         "schema": {
                             "type": "integer"
@@ -1779,11 +1817,14 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Usuario actualizado exitosamente",
+                        "description": "Usuario actualizado",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
                                         "Usuarios": {
                                             "$ref": "#/components/schemas/User"
                                         },
@@ -1842,13 +1883,11 @@
                     "Usuarios"
                 ],
                 "summary": "Eliminar un usuario",
-                "description": "Eliminar un usuario existente por su ID.",
-                "operationId": "deleteUsuario",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "ID del usuario a eliminar",
+                        "description": "ID del usuario",
                         "required": true,
                         "schema": {
                             "type": "integer"
@@ -1857,7 +1896,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Usuario eliminado exitosamente",
+                        "description": "Usuario eliminado",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1898,14 +1937,12 @@
                 "tags": [
                     "Usuarios"
                 ],
-                "summary": "Actualizar parcialmente un usuario",
-                "description": "Actualizar uno o más datos de un usuario existente.",
-                "operationId": "updatePartialUsuario",
+                "summary": "Actualizar parcialmente un usuario existente",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "ID del usuario a actualizar parcialmente",
+                        "description": "ID del usuario",
                         "required": true,
                         "schema": {
                             "type": "integer"
@@ -1941,11 +1978,14 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Usuario actualizado parcialmente exitosamente",
+                        "description": "Usuario actualizado parcialmente",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
                                         "Usuarios": {
                                             "$ref": "#/components/schemas/User"
                                         },

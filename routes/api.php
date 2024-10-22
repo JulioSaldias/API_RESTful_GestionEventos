@@ -67,7 +67,10 @@ Route::patch('/Asistentes/{id}', [AsistentesController::class, 'updatePartial'])
 
 Route::delete('/Asistentes/{id}', [AsistentesController::class, 'destroy']);
 
-//usuario
+//Usuarios
+
+Route::post('/login', [UserController::class, 'login']);
+
 Route::get('/Usuarios', [userController::class, 'index']);
 
 Route::get('/Usuarios/{id}', [userController::class, 'show']);
@@ -83,4 +86,3 @@ Route::delete('/Usuarios/{id}', [userController::class, 'destroy']);
 Route::get('/docs', function () {
     return response()->json(file_get_contents(storage_path('api-docs/api-docs.json')));
 });
-
